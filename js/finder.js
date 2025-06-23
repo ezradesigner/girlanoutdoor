@@ -30,7 +30,7 @@ cityInput.addEventListener('input', function () {
                 cityInput.value = city;
                 autocompleteResults.style.display = 'none';
                 setTimeout(() => {
-                    window.location.href = `/cidades/${city.toLowerCase().replace(/\s+/g, '-')}.html`;
+                    window.location.href = `${city.toLowerCase().replace(/\s+/g, '-')}.html`;
                 }, 120);
             });
             autocompleteResults.appendChild(div);
@@ -76,7 +76,7 @@ function searchCity() {
     );
     if (foundCity) {
         // Redirect to city page
-        window.location.href = `/cidades/${foundCity.toLowerCase().replace(/\s+/g, '-')}`;
+        window.location.href = `${foundCity.toLowerCase().replace(/\s+/g, '-')}`;
     } else {
         errorElement.textContent = 'Por favor, selecione uma cidade válida da lista.';
         errorElement.style.display = 'block';
