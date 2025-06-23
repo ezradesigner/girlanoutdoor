@@ -6,7 +6,7 @@ ul {list-style: none;}
 
 .overlay {position: fixed;top: 0; left: 0; right: 0; bottom: 0;z-index: 998;opacity: 0;pointer-events: none;transition: opacity 0.3s ease;}
 .overlay.active {opacity: 1;pointer-events: all;}
-.top-menu {position: absolute;top: 0; left: 0; width: 100%; background: var(--black);z-index: 1001;transition: background 0.3s ease;padding: 15px 0;}
+.top-menu {position: absolute;top: 0; left: 0; width: 100%; background: transparent;z-index: 1001;transition: background 0.3s ease;padding: 15px 0;}
 .header-container {display: flex;justify-content: space-between;align-items: center;}
 .logo {display: flex;height: 40px;width: 152px;}
 .logo:hover {opacity:0.7;}
