@@ -30,7 +30,7 @@ cityInput.addEventListener('input', function () {
                 cityInput.value = city;
                 autocompleteResults.style.display = 'none';
                 setTimeout(() => {
-                    window.location.href = `/cidades/${city.toLowerCase().replace(/\s+/g, '-')}`;
+                    window.location.href = `${city.toLowerCase().replace(/\s+/g, '-')}.html`;
                 }, 120);
             });
             autocompleteResults.appendChild(div);
