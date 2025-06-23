@@ -1,3 +1,29 @@
+// Scroll-aware top menu without initial animation
+let lastScroll = 0;
+const topMenu = document.querySelector('.inside-menu');
+const scrollThreshold = 200; // Pixels to scroll before hiding
+
+window.addEventListener('scroll', function() {
+    const currentScroll = window.pageYOffset;
+    
+    // At very top - ensure menu is visible
+    if (currentScroll <= 10) {
+        topMenu.classList.remove('hidden');
+        return;
+    }
+    
+    // Scrolling down - hide menu
+    if (currentScroll > lastScroll && currentScroll > scrollThreshold) {
+        topMenu.classList.add('hidden');
+    } 
+    // Scrolling up - show menu
+    else if (currentScroll < lastScroll) {
+        topMenu.classList.remove('hidden');
+    }
+    
+    lastScroll = currentScroll;
+});
+
 // Mobile menu
 const hamburger = document.querySelectorAll('.hamburger');
 const closeBtn = document.querySelector('.close-btn');
@@ -22,19 +48,6 @@ document.querySelectorAll('.mobile-links a').forEach(link => {
     link.addEventListener('click', toggleMenu);
 });
 
-// Sticky menu
-const stickyMenu = document.querySelector('.sticky-menu');
-const header = document.querySelector('.hero');
-const headerHeight = header.offsetHeight;
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > headerHeight) {
-        stickyMenu.classList.add('visible');
-    } else {
-        stickyMenu.classList.remove('visible');
-    }
-});
-
 // Smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -56,7 +69,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Portfolio Filter
 const filterButtons = document.querySelectorAll('.filter-button');
-const portfolioItems = document.querySelectorAll('.portfolio-item');
+const portfolioItems = document.querySelectorAll('.midia-card');
 
 filterButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -77,53 +90,32 @@ filterButtons.forEach(button => {
     });
 });
 
-// Clients Carousel
-const clientsCarousel = document.querySelector('.clients-carousel');
-const clientsTrack = document.querySelector('.clients-track');
-const carouselDots = document.querySelectorAll('.carousel-dot');
-let currentCarouselSlide = 0;
-const totalSlides = 3;
-let carouselInterval;
-function initCarousel() {
-    moveToSlide(0);
-    clearInterval(carouselInterval);
-    carouselInterval = setInterval(() => {
-        currentCarouselSlide = (currentCarouselSlide + 1) % totalSlides;
-        moveToSlide(currentCarouselSlide);
-    }, 5000);
-}
-function moveToSlide(index) {
-    currentCarouselSlide = index;
-    const slideWidth = 100;
-    clientsTrack.style.transform = `translateX(-${currentCarouselSlide * slideWidth}%)`;
-    carouselDots.forEach(dot => dot.classList.remove('active'));
-    carouselDots[currentCarouselSlide].classList.add('active');
-}
-initCarousel();
-carouselDots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        moveToSlide(index);
+// Initialize Google Maps
+function initMap() {
+    document.querySelectorAll('.midia-map').forEach(mapDiv => {
+        const lat = parseFloat(mapDiv.dataset.lat);
+        const lng = parseFloat(mapDiv.dataset.lng);
+        const title = mapDiv.dataset.title;
+        
+        const map = new google.maps.Map(mapDiv, {
+            center: {lat, lng},
+            zoom: 15,
+            disableDefaultUI: true,
+            styles: [
+                {
+                    "featureType": "poi",
+                    "stylers": [{"visibility": "off"}]
+                }
+            ]
+        });
+        
+        new google.maps.Marker({
+            position: {lat, lng},
+            map,
+            title
+        });
     });
-});
-clientsCarousel.addEventListener('mouseenter', () => {
-    clearInterval(carouselInterval);
-});
-clientsTrack.addEventListener('mouseleave', () => {
-    carouselInterval = setInterval(() => {
-        currentCarouselSlide = (currentCarouselSlide + 1) % totalSlides;
-        moveToSlide(currentCarouselSlide);
-    }, 5000);
-});
-
-// Sticky header on scroll
-window.addEventListener('scroll', () => {
-    const header = document.querySelector('header');
-    if (window.scrollY > 100) {
-        header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-    } else {
-        header.style.boxShadow = 'none';
-    }
-});
+}
 
 // Form submission
 const ctaForm = document.querySelector('.cta-form');
