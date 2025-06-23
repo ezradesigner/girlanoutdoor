@@ -76,7 +76,7 @@ function searchCity() {
     );
     if (foundCity) {
         // Redirect to city page
-        window.location.href = `/cidades/${foundCity.toLowerCase().replace(/\s+/g, '-')}`;
+        window.location.href = `${foundCity.toLowerCase().replace(/\s+/g, '-')}`;
     } else {
         errorElement.textContent = 'Por favor, selecione uma cidade válida da lista.';
         errorElement.style.display = 'block';
