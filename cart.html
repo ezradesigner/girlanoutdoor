@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Girlan Outdoor - Mídias Externas - OOH Marketing</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Menu -->
+<div class="overlay"></div>
+<div class="inside-menu" id="top">
+    <div class="container header-container">
+        <a href="index.html" class="logo"><img src="logo_white.png" alt="Girlan Outdoor"></a>
+        <nav class="nav-links">
+            <a href="index.html#">Pontos de Mídia</a>
+            <a href="#services">Serviços</a>
+            <a href="#portfolio">Campanhas</a>
+            <a href="#clients">Clientes</a>
+            <a href="#about">Sobre nós</a>
+            <a href="#contact">Contato</a>
+        </nav>    
+        <a href="https://api.whatsapp.com/send?phone=5571988288000&text=Ol%C3%A1!%20Gostaria%20de%20um%20or%C3%A7amento%20para%20m%C3%ADdia%20com%20veicula%C3%A7%C3%A3o%20em%20grandes%20formatos.%20Podem%20me%20ajudar%3F" class="cta-button">Faça seu Orçamento</a>
+        <a href="cart.html" class="cart-button">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </a>   
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<div class="mobile-menu">
+    <div class="hamburger close-btn">
+        <span></span>
+        <span></span>
+    </div>
+    <ul class="mobile-links">
+        <li><a href="index.html">Pontos de Mídia</a></li>
+        <li><a href="index.html#services">Serviços</a></li>
+        <li><a href="index.html#portfolio">Campanhas</a></li>
+        <li><a href="index.html#clients">Clientes</a></li>
+        <li><a href="index.html#about">Sobre nós</a></li>
+        <li><a href="#contact">Contato</a></li>
+    </ul>
+    <a href="https://api.whatsapp.com/send?phone=5571988288000&text=Ol%C3%A1!%20Gostaria%20de%20um%20or%C3%A7amento%20para%20m%C3%ADdia%20com%20veicula%C3%A7%C3%A3o%20em%20grandes%20formatos.%20Podem%20me%20ajudar%3F" target="_blank" class="mobile-cta-button">Orçamentos</a>
+</div>
+
+<section class="midia">
+    <div class="midia-container">
+        <div class="midia-sidebar">
+            <div class="search-container">
+                <i class="fas fa-search search-icon2"></i>
+                <input type="text" id="cityInput" placeholder="Buscar mídias na Bahia e Nordeste" autocomplete="off" maxlength="32">
+                <i class="fas fa-times clear-icon2" id="clearSearch"></i>
+                <div id="autocompleteResults" class="autocomplete-results"></div>
+            </div>
+            <div id="searchError" class="search-error"></div>
+        </div>
+        <div class="midia-main">
+            <div class="section-header">
+                <span class="section-subtitle">Lista de desejos</span>
+                <h2 class="section-title">Solicitação de Orçamento</h2>
+            </div>
+            <div id="cart-items" class="cart-items-container">
+            </div>
+            <div id="client-info">
+                <form id="checkout-form" action="https://formsubmit.co/girlan@girlan.com.br" method="POST">
+                    <input type="hidden" name="_subject" value="Novo pedido de orçamento - Girlan Outdoor">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_next" value="https://girlanoutdoor.com.br/obrigado.html">
+
+                    <input type="text" name="name" placeholder="Nome completo" required>
+                    <input type="text" name="agency" placeholder="Agência (opcional)">
+                    <input type="email" name="email" placeholder="E-mail" required>
+                    <input type="tel" name="whatsapp" placeholder="WhatsApp" required>
+
+                    <input type="hidden" name="cart_data" id="cart-data">
+
+                    <div class="cart-actions">
+                        <button type="button" id="clear-cart">Limpar Carrinho</button>
+                        <a href="index.html">Continuar Comprando</a>
+                        <button type="submit">Enviar Pedido</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-col">
+                <img src="logo_white.png" alt="Girlan Outdoor">
+                <p class="footer-description">Rua Tiburtino Peixoto, 104<br/>Santo Antônio de Jesus - BA</p>
+                <ul>
+                    <li><a href="mailto:girlan@girlan.com.br">girlan@girlan.com.br</a></li>                    
+                    <li><a href="https://wa.me/5571988288000" target="_blank" rel="noopener">(71) 98828-8000</a></li>
+                    <li>(75) 3631-4414</li>
+                </ul>
+                <!--div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div-->
+            </div>
+            <div class="footer-col">
+                <h3>Serviços</h3>
+                <ul>
+                    <li><a href="#">Outdoor</a></li>
+                    <li><a href="#">Painéis LED</a></li>
+                    <li><a href="#">Painéis Rodoviários</a></li>
+                    <li><a href="#">Empenas</a></li>
+                    <li><a href="#">Front Light</a></li>
+                    <li><a href="#">Impressão Digital</a></li>
+                    <li><a href="#">Mídia em Aeroportos</a></li>
+                    <li><a href="#">Mídia em Mobiliário Urbano</a></li>
+                    <li><a href="#">Mídia em Rodoviárias</a></li>
+                    <li><a href="#">Mídia Busdoor</a></li>
+                    <li><a href="#">Mídia Indoor</a></li>
+                    <li><a href="#">Mídia Taxidoor</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Institucional</h3>
+                <ul>
+                    <li><a href="index.html">Pontos de Mídia</a></li>
+                    <li><a href="index.html#portfolio">Campanhas</a></li>
+                    <li><a href="index.html#clients">Clientes</a></li>
+                    <li><a href="index.html#about">Sobre Nós</a></li>
+                    <li><a href="index.html#contact">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Girlan Outdoor. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
+<!-- whatsapp -->
+<a href="https://api.whatsapp.com/send?phone=5571988288000&text=Ol%C3%A1!%20Gostaria%20de%20um%20or%C3%A7amento%20para%20m%C3%ADdia%20com%20veicula%C3%A7%C3%A3o%20em%20grandes%20formatos.%20Podem%20me%20ajudar%3F" target="_blank" class="whatsapp-fixed" rel="noopener">
+    <img src="https://cdn-icons-png.flaticon.com/128/5968/5968841.png" alt="WhatsApp">
+</a>
+
+<script src="finder.js"></script>
+<script src="inside.js"></script>
+<script src="cart.js"></script>
+
+
+</body>
+</html>
