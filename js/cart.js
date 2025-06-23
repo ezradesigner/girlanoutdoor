@@ -23,80 +23,85 @@ class CartManager {
   saveCart(cart) {
     localStorage.setItem(this.CART_KEY, JSON.stringify(cart));
     this.updateCartCount();
-    this.dispatchCartUpdateEvent();
+    this.updateCartButtons();
   }
 
-  addItem(item) {
+  isInCart(itemId, city) {
+    return this.getCart().some(item => item.id === itemId && item.city === city);
+  }
+
+  toggleItem(item) {
     const cart = this.getCart();
-    
-    // Check if item already exists in cart
-    const existingItemIndex = cart.findIndex(cartItem => 
+    const itemIndex = cart.findIndex(cartItem => 
       cartItem.id === item.id && cartItem.city === item.city
     );
 
-    if (existingItemIndex >= 0) {
-      // Item exists
-      this.showToastMessage("Esta mídia já está no seu carrinho", "info");
+    if (itemIndex >= 0) {
+      // Remove item if already in cart
+      cart.splice(itemIndex, 1);
     } else {
-      // Add new item
+      // Add item if not in cart
       item.quantity = 1;
       cart.push(item);
     }
 
     this.saveCart(cart);
-    return true;
-  }
-
-  removeItem(itemId, city) {
-    const cart = this.getCart().filter(item => 
-      !(item.id === itemId && item.city === city)
-    );
-    this.saveCart(cart);
-  }
-
-  clearCart() {
-    this.saveCart([]);
   }
 
   updateCartCount() {
-    const count = this.getCart().reduce((total, item) => total + (item.quantity || 1), 0);
+    const count = this.getCart().length;
     document.querySelectorAll('.cart-count').forEach(el => {
       el.textContent = count;
       el.style.display = count > 0 ? 'inline-block' : 'none';
     });
   }
 
-  dispatchCartUpdateEvent() {
-    window.dispatchEvent(new CustomEvent('cartUpdated'));
+  updateCartButtons() {
+    document.querySelectorAll('.add-cart-button').forEach(button => {
+      const card = button.closest('.midia-card');
+      if (!card) return;
+
+      const itemId = card.dataset.midiaId;
+      const city = document.querySelector('.section-title')?.textContent.replace('Mídias em ', '') || 'Salvador';
+      const icon = button.querySelector('i');
+      const text = button.querySelector('span');
+
+      if (this.isInCart(itemId, city)) {
+        if (icon) icon.className = 'fas fa-check';
+        if (text) text.textContent = 'Mídia adicionada';
+        button.classList.add('in-cart');
+      } else {
+        if (icon) icon.className = 'fas fa-cart-shopping';
+        if (text) text.textContent = 'Adicionar ao carrinho';
+        button.classList.remove('in-cart');
+      }
+    });
   }
 
   setupEventListeners() {
-    // Handle cart button clicks
     document.addEventListener('click', (e) => {
-      if (e.target.closest('.add-to-cart') || e.target.closest('.add-cart-button')) {
-        e.preventDefault();
-        const card = e.target.closest('.midia-card');
-        
-        if (card) {
-          const item = {
-            id: card.dataset.midiaId,
-            title: card.querySelector('.midia-adress p').textContent,
-            image: card.querySelector('.midia-image').src,
-            city: document.querySelector('.section-title')?.textContent.replace('Mídias em ', '') || 'Salvador',
-            type: card.querySelector('li:nth-child(2) a').textContent
-          };
-          
-          if (this.addItem(item)) {
-            alert('Mídia adicionada ao carrinho!');
-          }
-        }
-      }
+      const button = e.target.closest('.add-cart-button');
+      if (!button) return;
+
+      e.preventDefault();
+      const card = button.closest('.midia-card');
+      if (!card) return;
+
+      const item = {
+        id: card.dataset.midiaId,
+        title: card.querySelector('.midia-adress p').textContent,
+        image: card.querySelector('.midia-image').src,
+        city: document.querySelector('.section-title')?.textContent.replace('Mídias em ', '') || 'Salvador',
+        type: card.querySelector('li:nth-child(2) a').textContent
+      };
+
+      this.toggleItem(item);
     });
 
-    // Update cart when storage changes in other tabs
     window.addEventListener('storage', (e) => {
       if (e.key === this.CART_KEY) {
         this.updateCartCount();
+        this.updateCartButtons();
       }
     });
   }
@@ -110,86 +115,64 @@ if (window.location.pathname.includes('cart.html')) {
   function displayCartItems() {
     const cartItems = cart.getCart();
     const cartContainer = document.getElementById('cart-items');
-    const totalElement = document.getElementById('cart-total');
     
     if (cartItems.length === 0) {
       cartContainer.innerHTML = '<p class="empty-cart">Seu carrinho está vazio</p>';
-      totalElement.textContent = '0';
       return;
     }
 
-    let html = '';
-    cartItems.forEach(item => {
-      html += `
-        <div class="cart-item" data-id="${item.id}" data-city="${item.city}">
-          <img src="${item.image}" alt="${item.title}">
-          <div class="cart-item-details">
-            <h3>${item.title}</h3>
-            <p><strong>Cidade:</strong> ${item.city}</p>
-            <p><strong>Tipo:</strong> ${item.type}</p>
-            <p><strong>Quantidade:</strong> ${item.quantity || 1}</p>
-            <button class="remove-item">Remover</button>
-          </div>
+    cartContainer.innerHTML = cartItems.map(item => `
+      <div class="cart-item" data-id="${item.id}" data-city="${item.city}">
+        <img src="${item.image}" alt="${item.title}">
+        <div class="cart-item-details">
+          <h3>${item.title}</h3>
+          <p><strong>Cidade:</strong> ${item.city}</p>
+          <p><strong>Tipo:</strong> ${item.type}</p>
+          <button class="remove-item">Remover</button>
         </div>
-      `;
-    });
+      </div>
+    `).join('');
 
-    cartContainer.innerHTML = html;
-    
-    // Add event listeners to remove buttons
     document.querySelectorAll('.remove-item').forEach(button => {
       button.addEventListener('click', function() {
         const itemElement = this.closest('.cart-item');
-        cart.removeItem(itemElement.dataset.id, itemElement.dataset.city);
+        cart.toggleItem({
+          id: itemElement.dataset.id,
+          city: itemElement.dataset.city
+        });
         displayCartItems();
       });
     });
   }
 
-  // Handle form submission
   document.getElementById('checkout-form')?.addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    const cartItems = cart.getCart();
-    if (cartItems.length === 0) {
+    if (cart.getCart().length === 0) {
       alert('Seu carrinho está vazio!');
       return;
     }
 
-    // Prepare cart data for email
-    const cartData = {
-      items: cartItems,
+    this.querySelector('#cart-data').value = JSON.stringify({
+      items: cart.getCart(),
       clientInfo: {
         name: this.querySelector('[name="name"]').value,
         email: this.querySelector('[name="email"]').value,
         whatsapp: this.querySelector('[name="whatsapp"]').value,
         agency: this.querySelector('[name="agency"]').value
-      },
-      totalItems: cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0)
-    };
+      }
+    });
 
-    // Set hidden field with cart data
-    this.querySelector('#cart-data').value = JSON.stringify(cartData);
-
-    // Submit form (using FormSubmit.co)
     this.submit();
-    
-    // Clear cart after successful submission
     cart.clearCart();
-    displayCartItems();
-    
-    // Show success message
-    alert('Pedido enviado com sucesso! Entraremos em contato em breve.');
+    alert('Pedido enviado com sucesso!');
   });
 
-  // Clear cart button
-  document.getElementById('clear-cart')?.addEventListener('click', function() {
+  document.getElementById('clear-cart')?.addEventListener('click', () => {
     if (confirm('Tem certeza que deseja limpar seu carrinho?')) {
       cart.clearCart();
       displayCartItems();
     }
   });
 
-  // Initial display
   displayCartItems();
 }
