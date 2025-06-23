@@ -1,4 +1,3 @@
-// cart.js - Main cart functionality
 class CartManager {
   constructor() {
     this.CART_KEY = 'girlan_outdoor_cart_v2';
@@ -36,8 +35,8 @@ class CartManager {
     );
 
     if (existingItemIndex >= 0) {
-      // Item exists, update quantity
-      cart[existingItemIndex].quantity = (cart[existingItemIndex].quantity || 1) + 1;
+      // Item exists
+      this.showToastMessage("Esta mídia já está no seu carrinho", "info");
     } else {
       // Add new item
       item.quantity = 1;
@@ -86,10 +85,6 @@ class CartManager {
             city: document.querySelector('.section-title')?.textContent.replace('Mídias em ', '') || 'Salvador',
             type: card.querySelector('li:nth-child(2) a').textContent
           };
-          
-          if (this.addItem(item)) {
-            alert('Mídia adicionada ao carrinho!');
-          }
         }
       }
     });
