@@ -24,7 +24,7 @@ window.addEventListener('scroll', function() {
     lastScroll = currentScroll;
 });
 
-// Mobile menu
+// Mobile menu functionality
 const hamburger = document.querySelectorAll('.hamburger');
 const closeBtn = document.querySelector('.close-btn');
 const mobileMenu = document.querySelector('.mobile-menu');
@@ -40,17 +40,20 @@ function toggleMenu() {
         }
     });
 }
+
 hamburger.forEach(btn => {
     btn.addEventListener('click', toggleMenu);
 });
+
 overlay.addEventListener('click', toggleMenu);
+
 document.querySelectorAll('.mobile-links a').forEach(link => {
     link.addEventListener('click', toggleMenu);
 });
 
-// Smooth scrolling
+// Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const targetId = this.getAttribute('href');
         if (targetId === '#') return;
@@ -60,70 +63,76 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 top: targetElement.offsetTop - 80,
                 behavior: 'smooth'
             });
-            if (window.innerWidth <= 768) {
-                navLinks.style.display = 'none';
-            }
         }
     });
 });
 
-// Portfolio Filter
+// Combined filter system for media cards
 const filterButtons = document.querySelectorAll('.filter-button');
-const portfolioItems = document.querySelectorAll('.midia-card');
+const placeCheckboxes = document.querySelectorAll('.place-checkbox');
+const midiaCards = document.querySelectorAll('.midia-card');
 
-filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Update active button
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
+function filterMediaCards() {
+    const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+    const selectedPlaces = Array.from(placeCheckboxes)
+        .filter(checkbox => checkbox.checked && checkbox.value !== 'all')
+        .map(checkbox => checkbox.value);
 
-        const filter = button.getAttribute('data-filter');
-
-        // Filter items
-        portfolioItems.forEach(item => {
-            if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    });
-});
-
-// Initialize Google Maps
-function initMap() {
-    document.querySelectorAll('.midia-map').forEach(mapDiv => {
-        const lat = parseFloat(mapDiv.dataset.lat);
-        const lng = parseFloat(mapDiv.dataset.lng);
-        const title = mapDiv.dataset.title;
+    midiaCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        const cardPlace = card.getAttribute('data-place');
         
-        const map = new google.maps.Map(mapDiv, {
-            center: {lat, lng},
-            zoom: 15,
-            disableDefaultUI: true,
-            styles: [
-                {
-                    "featureType": "poi",
-                    "stylers": [{"visibility": "off"}]
-                }
-            ]
-        });
+        // Check category filter
+        const matchesCategory = activeFilter === 'all' || cardCategory === activeFilter;
         
-        new google.maps.Marker({
-            position: {lat, lng},
-            map,
-            title
-        });
+        // Check place filter
+        const matchesPlace = selectedPlaces.length === 0 || selectedPlaces.includes(cardPlace);
+        
+        // Show/hide based on both filters
+        card.style.display = (matchesCategory && matchesPlace) ? 'block' : 'none';
     });
 }
 
-// Form submission
+// Initialize filter buttons
+filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        filterMediaCards();
+    });
+});
+
+// Initialize place checkboxes
+placeCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        // Handle "All" checkbox behavior
+        if (this.value === 'all' && this.checked) {
+            placeCheckboxes.forEach(cb => {
+                if (cb.value !== 'all') cb.checked = false;
+            });
+        } else if (this.value !== 'all' && this.checked) {
+            // Uncheck "All" if any specific place is selected
+            document.querySelector('.place-checkbox[value="all"]').checked = false;
+        }
+        
+        filterMediaCards();
+    });
+});
+
+// Form submission handler
 const ctaForm = document.querySelector('.cta-form');
-ctaForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const emailInput = ctaForm.querySelector('input[type="email"]');
-    const messageInput = ctaForm.querySelector('textarea');
-    alert(`Agradecemos seu interesse! Entraremos em contato em breve.`);
-    emailInput.value = '';
-    messageInput.value = '';
-}); 
+if (ctaForm) {
+    ctaForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emailInput = ctaForm.querySelector('input[type="email"]');
+        const messageInput = ctaForm.querySelector('textarea');
+        alert(`Agradecemos seu interesse! Entraremos em contato em breve.`);
+        emailInput.value = '';
+        messageInput.value = '';
+    });
+}
+
+// Initialize filters on page load
+document.addEventListener('DOMContentLoaded', function() {
+    filterMediaCards();
+});
